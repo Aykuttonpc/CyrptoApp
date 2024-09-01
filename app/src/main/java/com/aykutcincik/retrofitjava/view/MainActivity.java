@@ -2,7 +2,11 @@ package com.aykutcincik.retrofitjava.view;
 
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.aykutcincik.retrofitjava.R;
+import com.aykutcincik.retrofitjava.adapter.RecyclerViewAdapter;
 import com.aykutcincik.retrofitjava.model.CyrptoModel;
 import com.aykutcincik.retrofitjava.service.CyrptoApi;
 import com.google.gson.Gson;
@@ -22,6 +26,9 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<CyrptoModel> cryptoModels;
     private String BASE_URL = "https://raw.githubusercontent.com";
     Retrofit retrofit;
+    RecyclerView recyclerView;
+    RecyclerViewAdapter recyclerViewAdapter;
+
 
 
     @Override
@@ -29,6 +36,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //https://raw.githubusercontent.com/atilsamancioglu/K21-JSONDataSet/master/crypto.json
+
+        recyclerView = findViewById(R.id.recyclerView);
+
 
         Gson gson  = new GsonBuilder().setLenient().create();
 
@@ -53,6 +63,12 @@ public class MainActivity extends AppCompatActivity {
                 if (response.isSuccessful()){
                     List<CyrptoModel> responseList = response.body();
                     cryptoModels = new ArrayList<>(responseList);
+
+                    //RecyclerView
+                    recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+                    recyclerViewAdapter = new RecyclerViewAdapter(cryptoModels);
+                    recyclerView.setAdapter(recyclerViewAdapter);
+
 
 
                     for (CyrptoModel cyrptoModel : cryptoModels){
